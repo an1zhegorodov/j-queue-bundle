@@ -8,12 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Job
  *
+ * @ORM\MappedSuperclass
  * @ORM\Table(name="jqueue_job", indexes={
  *  @ORM\Index(name="type_status_worker_created_idx", columns={"type_id", "status_id", "worker_id", "created"})
  * })
- * @ORM\Entity(repositoryClass="An1zhegorodov\JQueueBundle\Entity\JobRepository")
  */
-class Job extends BaseJob
+abstract class Job extends BaseJob
 {
     /**
      * @var integer

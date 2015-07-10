@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\MappedSuperclass
  */
-class BaseJob
+abstract class BaseJob
 {
     /**
      * @var integer

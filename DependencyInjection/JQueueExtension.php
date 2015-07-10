@@ -3,8 +3,10 @@
 namespace An1zhegorodov\JQueueBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -28,9 +30,9 @@ class JQueueExtension extends Extension
         $loader->load('services.yml');
     }
 
-    protected function processJobTypeConfig(array $config, ContainerInterface $container)
+    protected function processJobTypeConfig(array $config, ContainerBuilder $container)
     {
-        $config[] = array('id' => 99999999, 'title' => 'default');
+        $config[] = array('id' => 32767, 'title' => 'default');
         foreach ($config as $item) {
             $parameter = sprintf('jqueue.job_types.%s', $item['title']);
             $value = $item['id'];

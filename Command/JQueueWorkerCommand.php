@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class JQueueWorkerCommand extends ContainerAwareCommand
 {
@@ -21,10 +22,15 @@ class JQueueWorkerCommand extends ContainerAwareCommand
         $this->setName('jqueue:worker:run')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Unique worker id')
             ->addOption('job_type', null, InputOption::VALUE_REQUIRED, 'Job type for this worker to select')
-            ->addOption('repository', null, InputOption::VALUE_OPTIONAL, 'Job repository service')
+            ->addOption('repository', null, InputOption::VALUE_REQUIRED, 'Job repository service')
             ->addOption('delay', null, InputOption::VALUE_OPTIONAL, 'Delay in seconds between queue polls', 1)
             ->addOption('expires', null, InputOption::VALUE_REQUIRED, 'Seconds before the worker dies')
             ->addOption('no-keep', null, InputOption::VALUE_NONE, 'Do not keep processed items in queue');
+    }
+
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired(array('id', 'job_type', 'repository', 'delay', 'expires'));
     }
 
     public function execute(InputInterface $input, OutputInterface $output)

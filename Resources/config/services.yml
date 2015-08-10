@@ -1,4 +1,7 @@
 services:
+    jqueue.generator.entity:
+        class: An1zhegorodov\JQueueBundle\Generator\JQueueEntityGenerator
+        arguments: [ @filesystem, @doctrine ]
     jqueue.listener.echo:
         class: An1zhegorodov\JQueueBundle\Listener\EchoListener
         arguments: [ %jqueue.job_types.default% ]

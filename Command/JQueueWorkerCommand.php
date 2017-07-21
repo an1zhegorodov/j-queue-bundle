@@ -54,12 +54,15 @@ class JQueueWorkerCommand extends ContainerAwareCommand
 
         while (time() < $endTime) {
             $jobId = $jobRepository->pop($jobTypeId, $workerId);
+            if (!$jobId) {
+                sleep($delay);
+                continue;
+            }
             $consumer->consume($jobId);
             $jobRepository->done($jobId);
             if ($noKeep) {
                 $jobRepository->delete($jobId);
             }
-            sleep($delay);
         }
     }
 }

@@ -1,5 +1,5 @@
 {
-    "name": "an1zhegorodov/j-queue-bundle",
+    "name": "mintobit/j-queue-bundle",
     "description": "Simple queueing for Symfony2",
     "type": "symfony-bundle",
     "require": {
@@ -17,7 +17,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "An1zhegorodov\\JQueueBundle\\": ""
+            "Mintobit\\JQueueBundle\\": ""
         }
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace An1zhegorodov\JQueueBundle\Command;
+namespace Mintobit\JQueueBundle\Command;
 
-use An1zhegorodov\JQueueBundle\Command\Exception\InvalidConsumerException;
-use An1zhegorodov\JQueueBundle\Command\Exception\InvalidJobTypeException;
-use An1zhegorodov\JQueueBundle\Services\JobConsumerInterface;
+use Mintobit\JQueueBundle\Command\Exception\InvalidConsumerException;
+use Mintobit\JQueueBundle\Command\Exception\InvalidJobTypeException;
+use Mintobit\JQueueBundle\Services\JobConsumerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

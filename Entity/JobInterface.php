@@ -1,6 +1,6 @@
 <?php
 
-namespace An1zhegorodov\JQueueBundle\Entity;
+namespace Mintobit\JQueueBundle\Entity;
 
 interface JobInterface
 {

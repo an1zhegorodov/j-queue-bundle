@@ -1,6 +1,6 @@
 <?php
 
-namespace An1zhegorodov\JQueueBundle\Services;
+namespace Mintobit\JQueueBundle\Services;
 
 use Mintobit\JobQueue\JobRepositoryInterface;
 

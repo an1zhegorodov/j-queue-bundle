@@ -1,6 +1,6 @@
 <?php
 
-namespace An1zhegorodov\JQueueBundle\DependencyInjection;
+namespace Mintobit\JQueueBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

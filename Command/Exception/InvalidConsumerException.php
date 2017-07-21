@@ -1,6 +1,6 @@
 <?php
 
-namespace An1zhegorodov\JQueueBundle\Command\Exception;
+namespace Mintobit\JQueueBundle\Command\Exception;
 
 class InvalidConsumerException extends \InvalidArgumentException
 {

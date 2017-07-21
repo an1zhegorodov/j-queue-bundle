@@ -23,7 +23,7 @@ class Configuration implements ConfigurationInterface
                             ->isRequired()
                             ->cannotBeEmpty()
                         ->end()
-                        ->scalarNode('user')
+                        ->scalarNode('password')
                             ->isRequired()
                             ->cannotBeEmpty()
                         ->end()

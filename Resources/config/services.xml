@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="jqueue.pdo" class="\PDO" public="false">
+            <argument>%jqueue.db.dsn%</argument>
+            <argument>%jqueue.db.user%</argument>
+            <argument>%jqueue.db.password%</argument>
+        </service>
+
+        <service id="jqueue.job_repository" class="Mintobit\JobQueue\JobRepository">
+            <argument type="service" id="jqueue.pdo" />
+            <argument>%jqueue.db.table%</argument>
+        </service>
+
+        <service id="jqueue.job_producer" class="An1zhegorodov\JQueueBundle\Services\JobProducer">
+            <argument type="service" id="jqueue.job_repository" />
+        </service>
+    </services>
+</container>

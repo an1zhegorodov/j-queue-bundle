@@ -5,8 +5,6 @@
     "require": {
         "php": "^5.5.0",
         "symfony/framework-bundle": "~2.0",
-        "gedmo/doctrine-extensions": "~2.3.1",
-        "ramsey/array_column": "^1.1",
         "mintobit/jobqueue": "dev-master",
         "symfony/console": "~2.0"
     },

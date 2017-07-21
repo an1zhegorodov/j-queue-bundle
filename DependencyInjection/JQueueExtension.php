@@ -19,7 +19,7 @@ class JQueueExtension extends Extension
         $this->processDatabaseConfig($config['database'], $container);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
+        $loader->load('services.yml');
     }
 
     private function processJobTypeConfig(array $config, ContainerBuilder $container)

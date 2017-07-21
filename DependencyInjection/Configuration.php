@@ -13,9 +13,13 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('j_queue');
         $rootNode
             ->children()
-                ->arrayNode('database_connection')
+                ->arrayNode('database')
                     ->children()
                         ->scalarNode('dsn')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('table')
                             ->isRequired()
                             ->cannotBeEmpty()
                         ->end()

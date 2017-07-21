@@ -16,12 +16,13 @@ class JQueueExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         $this->processJobTypeConfig($config['job_types'], $container);
+        $this->processDatabaseConfig($config['database'], $container);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.yml');
+        $loader->load('services.xml');
     }
 
-    protected function processJobTypeConfig(array $config, ContainerBuilder $container)
+    private function processJobTypeConfig(array $config, ContainerBuilder $container)
     {
         $config[] = array('id' => static::DEFAULT_JOB_ID, 'title' => 'default');
         foreach ($config as $item) {
@@ -29,5 +30,13 @@ class JQueueExtension extends Extension
             $value = $item['id'];
             $container->setParameter($parameter, $value);
         }
+    }
+
+    private function processDatabaseConfig(array $config, ContainerBuilder $container)
+    {
+        $container->setParameter('jqueue.db.dsn', $config['dsn']);
+        $container->setParameter('jqueue.db.table', $config['table']);
+        $container->setParameter('jqueue.db.user', $config['user']);
+        $container->setParameter('jqueue.db.password', $config['password']);
     }
 }

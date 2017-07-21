@@ -5,7 +5,7 @@
     "require": {
         "php": "^5.5.0",
         "symfony/framework-bundle": "~2.0",
-        "mintobit/jobqueue": "dev-master",
+        "mintobit/jobqueue": "v1.0.0-alpha",
         "symfony/console": "~2.0"
     },
     "license": "MIT",

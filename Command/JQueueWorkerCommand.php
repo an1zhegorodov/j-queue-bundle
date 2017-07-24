@@ -1,13 +1,10 @@
 <?php
 
-namespace An1zhegorodov\JQueueBundle\Command;
+namespace Mintobit\JQueueBundle\Command;
 
-use An1zhegorodov\JQueueBundle\Entity\BaseJob;
-use An1zhegorodov\JQueueBundle\Entity\Job;
-use An1zhegorodov\JQueueBundle\Entity\JobRepositoryInterface;
-use An1zhegorodov\JQueueBundle\Entity\JobStatuses;
-use An1zhegorodov\JQueueBundle\Event\Events;
-use An1zhegorodov\JQueueBundle\Event\JobReceivedEvent;
+use Mintobit\JQueueBundle\Command\Exception\InvalidConsumerException;
+use Mintobit\JQueueBundle\Command\Exception\InvalidJobTypeException;
+use Mintobit\JQueueBundle\Services\JobConsumerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,7 +18,7 @@ class JQueueWorkerCommand extends ContainerAwareCommand
         $this->setName('jqueue:worker:run')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Unique worker id')
             ->addOption('job_type', null, InputOption::VALUE_REQUIRED, 'Job type for this worker to select')
-            ->addOption('repository', null, InputOption::VALUE_OPTIONAL, 'Job repository service')
+            ->addOption('consumer', null, InputOption::VALUE_REQUIRED, 'Job consumer service')
             ->addOption('delay', null, InputOption::VALUE_OPTIONAL, 'Delay in seconds between queue polls', 1)
             ->addOption('expires', null, InputOption::VALUE_REQUIRED, 'Seconds before the worker dies')
             ->addOption('no-keep', null, InputOption::VALUE_NONE, 'Do not keep processed items in queue');
@@ -29,52 +26,43 @@ class JQueueWorkerCommand extends ContainerAwareCommand
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $workerId = $input->getOption('id');
+        $jobTypeTitle = strtolower($input->getOption('job_type'));
+        $consumerId = $input->getOption('consumer');
         $noKeep = $input->getOption('no-keep');
         $expires = $input->getOption('expires');
         $delay = $input->getOption('delay');
-        $repositoryString = $input->getOption('repository');
-        $jobTypeTitle = strtolower($input->getOption('job_type'));
-        $workerId = $input->getOption('id');
 
         if (!is_numeric($expires) || !is_numeric($delay) || !is_numeric($workerId)) {
-            $output->writeln(sprintf('<error>%s</error>', $this->getSynopsis()));
-            return;
+            throw new \InvalidArgumentException('Expires, delay and worker_id are expected to be numeric');
         }
 
         $container = $this->getContainer();
-        $eventDispatcher = $container->get('event_dispatcher');
-        $jobRepository = $container->get($repositoryString, Container::NULL_ON_INVALID_REFERENCE);
+        $consumer = $container->get($consumerId, Container::NULL_ON_INVALID_REFERENCE);
+        $jobRepository = $container->get('jqueue.job_repository', Container::EXCEPTION_ON_INVALID_REFERENCE);
 
         $jobTypeId = $container->getParameter(sprintf('jqueue.job_types.%s', $jobTypeTitle));
         $endTime = strtotime(sprintf('+%s seconds', $expires));
 
         if (!$jobTypeId) {
-            $output->writeln(sprintf('<error>%s</error>', $this->getSynopsis()));
-            $output->writeln(sprintf('<error>%s</error>', 'Invalid job_type'));
-            return;
+            throw new InvalidJobTypeException;
         }
 
-        if (is_null($jobRepository) && !($jobRepository instanceof JobRepositoryInterface)) {
-            $output->writeln(sprintf('<error>%s</error>', $this->getSynopsis()));
-            $output->writeln(sprintf('<error>%s</error>', 'Repository service does not exist'));
-            return;
+        if (is_null($consumer) || !($consumer instanceof JobConsumerInterface)) {
+            throw new InvalidConsumerException;
         }
 
         while (time() < $endTime) {
-            /** @var BaseJob $job */
-            $job = $jobRepository->pop($workerId, $jobTypeId);
-            if ($job instanceof BaseJob) {
-                $jobReceivedEvent = new JobReceivedEvent($job, $input, $output);
-                $eventDispatcher->dispatch(Events::JOB_RECEIVED, $jobReceivedEvent);
-                $job = $jobReceivedEvent->getJob();
-                if ($noKeep) {
-                    $jobRepository->remove($job);
-                } else {
-                    $job->setStatusId(JobStatuses::FINISHED);
-                }
-                $jobRepository->flush();
+            $jobId = $jobRepository->pop($jobTypeId, $workerId);
+            if (!$jobId) {
+                sleep($delay);
+                continue;
             }
-            sleep($delay);
+            $consumer->consume($jobId);
+            $jobRepository->done($jobId);
+            if ($noKeep) {
+                $jobRepository->delete($jobId);
+            }
         }
     }
 }

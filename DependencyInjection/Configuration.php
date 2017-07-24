@@ -1,26 +1,38 @@
 <?php
 
-namespace An1zhegorodov\JQueueBundle\DependencyInjection;
+namespace Mintobit\JQueueBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-/**
- * This is the class that validates and merges configuration from your app/config files
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
- */
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('j_queue');
         $rootNode
             ->children()
+                ->arrayNode('database')
+                    ->children()
+                        ->scalarNode('dsn')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('table')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('user')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('password')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('job_types')
                     ->defaultValue(array())
                     ->requiresAtLeastOneElement()
@@ -30,8 +42,8 @@ class Configuration implements ConfigurationInterface
                                 ->isRequired()
                                 ->cannotBeEmpty()
                                 ->validate()
-                                ->ifInArray(array(32767))
-                                    ->thenInvalid('Id "32767" is not allowed, please choose another value')
+                                ->ifInArray(array(JQueueExtension::DEFAULT_JOB_ID))
+                                    ->thenInvalid(sprintf('Id "%d" is default job id. Please choose another value', JQueueExtension::DEFAULT_JOB_ID))
                                 ->end()
                             ->end()
                             ->scalarNode('title')
@@ -58,10 +70,6 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
-
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
 
         return $treeBuilder;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace An1zhegorodov\JQueueBundle;
+namespace Mintobit\JQueueBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

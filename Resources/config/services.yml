@@ -1,6 +1,0 @@
-services:
-    jqueue.listener.echo:
-        class: An1zhegorodov\JQueueBundle\Listener\EchoListener
-        arguments: [ %jqueue.job_types.default% ]
-        tags:
-            - { name: kernel.event_listener, event: jqueue.job.received, method: onJobReceived }

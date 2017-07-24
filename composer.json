@@ -1,12 +1,12 @@
 {
-    "name": "an1zhegorodov/j-queue-bundle",
+    "name": "mintobit/j-queue-bundle",
     "description": "Simple queueing for Symfony2",
     "type": "symfony-bundle",
     "require": {
-        "php": "^5.3.3",
+        "php": "^5.5.0",
         "symfony/framework-bundle": "~2.0",
-        "gedmo/doctrine-extensions": "~2.3.1",
-        "ramsey/array_column": "^1.1"
+        "mintobit/jobqueue": "v1.0.0-alpha",
+        "symfony/console": "~2.0"
     },
     "license": "MIT",
     "authors": [
@@ -17,7 +17,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "An1zhegorodov\\JQueueBundle\\": ""
+            "Mintobit\\JQueueBundle\\": ""
         }
     }
 }

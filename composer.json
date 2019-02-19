@@ -3,7 +3,7 @@
     "description": "Simple queueing for Symfony2",
     "type": "symfony-bundle",
     "require": {
-        "php": "^5.5.0",
+        "php": ">=5.5.0",
         "symfony/framework-bundle": "~2.0",
         "mintobit/jobqueue": "v1.0.0-alpha",
         "symfony/console": "~2.0"
